@@ -45,12 +45,6 @@ def close_db(exception=None):
     if hasattr(request, 'db'):
         request.db.close()
 
-@app.route("/stars")
-def get_stars():
-    cur = dbh().cursor()
-    cur.execute('SELECT * FROM star WHERE keyword = %s', (request.args['keyword'], ))
-    return jsonify(stars = cur.fetchall())
-
 @app.route("/stars", methods=['POST'])
 def post_stars():
     keyword = request.args.get('keyword', "")
