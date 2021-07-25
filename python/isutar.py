@@ -45,12 +45,6 @@ def close_db(exception=None):
     if hasattr(request, 'db'):
         request.db.close()
 
-@app.route("/initialize")
-def get_initialize():
-    cur = dbh().cursor()
-    cur.execute('TRUNCATE star')
-    return jsonify(status = 'ok')
-
 @app.route("/stars")
 def get_stars():
     cur = dbh().cursor()

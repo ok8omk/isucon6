@@ -89,8 +89,7 @@ def authenticate(func):
 def get_initialize():
     cur = dbh().cursor()
     cur.execute('DELETE FROM entry WHERE id > 7101')
-    origin = config('isutar_origin')
-    urllib.request.urlopen(origin + '/initialize')
+    cur.execute('TRUNCATE star')
     return jsonify(result = 'ok')
 
 @app.route('/')
