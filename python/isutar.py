@@ -6,16 +6,31 @@ import urllib
 
 app = Flask(__name__)
 
+_config = {
+    'db_host':       os.environ.get('ISUDA_DB_HOST', 'localhost'),
+    'db_port':       int(os.environ.get('ISUDA_DB_PORT', '3306')),
+    'db_user':       os.environ.get('ISUDA_DB_USER', 'root'),
+    'db_password':   os.environ.get('ISUDA_DB_PASSWORD', ''),
+    'isutar_origin': os.environ.get('ISUTAR_ORIGIN', 'http://localhost:5001'),
+    'isupam_origin': os.environ.get('ISUPAM_ORIGIN', 'http://localhost:5050'),
+}
+
+def config(key):
+    if key in _config:
+        return _config[key]
+    else:
+        raise "config value of %s undefined" % key
+
 def dbh():
     if hasattr(request, 'db'):
         return request.db
     else:
         request.db = MySQLdb.connect(**{
-            'host': os.environ.get('ISUTAR_DB_HOST', 'localhost'),
-            'port': int(os.environ.get('ISUTAR_DB_PORT', '3306')),
-            'user': os.environ.get('ISUTAR_DB_USER', 'root'),
-            'passwd': os.environ.get('ISUTAR_DB_PASSWORD', ''),
-            'db': 'isutar',
+            'host': config('db_host'),
+            'port': config('db_port'),
+            'user': config('db_user'),
+            'passwd': config('db_password'),
+            'db': 'isuda',
             'charset': 'utf8mb4',
             'cursorclass': MySQLdb.cursors.DictCursor,
             'autocommit': True,
