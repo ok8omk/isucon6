@@ -11,6 +11,7 @@ _config = {
     'db_port':       int(os.environ.get('ISUDA_DB_PORT', '3306')),
     'db_user':       os.environ.get('ISUDA_DB_USER', 'root'),
     'db_password':   os.environ.get('ISUDA_DB_PASSWORD', ''),
+    'isutar_origin': os.environ.get('ISUTAR_ORIGIN', 'http://localhost:5001'),
     'isupam_origin': os.environ.get('ISUPAM_ORIGIN', 'http://localhost:5050'),
 }
 
@@ -43,6 +44,18 @@ def dbh():
 def close_db(exception=None):
     if hasattr(request, 'db'):
         request.db.close()
+
+@app.route("/initialize")
+def get_initialize():
+    cur = dbh().cursor()
+    cur.execute('TRUNCATE star')
+    return jsonify(status = 'ok')
+
+@app.route("/stars")
+def get_stars():
+    cur = dbh().cursor()
+    cur.execute('SELECT * FROM star WHERE keyword = %s', (request.args['keyword'], ))
+    return jsonify(stars = cur.fetchall())
 
 @app.route("/stars", methods=['POST'])
 def post_stars():
