@@ -225,7 +225,7 @@ def delete_keyword(keyword):
     return redirect('/')
 
 # 全レコードのkeywordsを取得する
-def get_keywords()
+def get_keywords():
     cur = dbh().cursor()
     cur.execute('SELECT * FROM entry ORDER BY CHARACTER_LENGTH(keyword) DESC')
     keywords = cur.fetchall()
